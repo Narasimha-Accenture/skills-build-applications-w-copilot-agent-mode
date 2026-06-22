@@ -9,14 +9,11 @@ import { connectDatabase, getMongoUri } from "./config/database";
 export const app = express();
 const port = 8000;
 const mongoUri = getMongoUri();
-const codespaceName = process.env.CODESPACE_NAME;
-const host = codespaceName ? `${codespaceName}-8000.app.github.dev` : "localhost";
-const apiUrl = codespaceName ? `https://${host}` : `http://${host}:${port}`;
 
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "OctoFit Tracker API is running.", apiUrl });
+  res.json({ message: "OctoFit Tracker API is running.", apiUrl: app.locals.apiUrl || `http://localhost:${port}` });
 });
 
 app.get("/health", (req: Request, res: Response) => {
@@ -29,7 +26,9 @@ app.use("/api/activities", activitiesRouter);
 app.use("/api/leaderboard", leaderboardRouter);
 app.use("/api/workouts", workoutsRouter);
 
-export const startServer = async (): Promise<void> => {
+export const startServer = async (apiUrl: string): Promise<void> => {
+  app.locals.apiUrl = apiUrl;
+
   await connectDatabase();
   console.log("Connected to MongoDB at", mongoUri);
 
@@ -37,10 +36,3 @@ export const startServer = async (): Promise<void> => {
     console.log(`Server listening on ${apiUrl}`);
   });
 };
-
-if (require.main === module) {
-  startServer().catch((error) => {
-    console.error("MongoDB connection error:", error);
-    process.exit(1);
-  });
-}
