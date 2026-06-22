@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
-import mongoose from "mongoose";
 import usersRouter from "./routes/users";
 import teamsRouter from "./routes/teams";
 import activitiesRouter from "./routes/activities";
 import leaderboardRouter from "./routes/leaderboard";
 import workoutsRouter from "./routes/workouts";
+import { connectDatabase, getMongoUri } from "./config/database";
 
 const app = express();
 const port = 8000;
-const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/octofit_db";
+const mongoUri = getMongoUri();
 const codespaceName = process.env.CODESPACE_NAME;
 const host = codespaceName ? `${codespaceName}-8000.githubpreview.dev` : "localhost";
 const apiUrl = `http://${host}:${port}`;
@@ -29,7 +29,7 @@ app.use("/api/activities", activitiesRouter);
 app.use("/api/leaderboard", leaderboardRouter);
 app.use("/api/workouts", workoutsRouter);
 
-mongoose.connect(mongoUri)
+connectDatabase()
   .then(() => {
     console.log("Connected to MongoDB at", mongoUri);
     app.listen(port, () => {
