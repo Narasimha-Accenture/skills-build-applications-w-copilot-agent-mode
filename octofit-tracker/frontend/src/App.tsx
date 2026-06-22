@@ -1,4 +1,10 @@
 import { Routes, Route, Link } from "react-router-dom";
+import Home from "./components/Home";
+import Activities from "./components/Activities";
+import Leaderboard from "./components/Leaderboard";
+import Teams from "./components/Teams";
+import Users from "./components/Users";
+import Workouts from "./components/Workouts";
 
 function App() {
   return (
@@ -7,31 +13,21 @@ function App() {
         <h1>OctoFit Tracker</h1>
         <nav>
           <Link className="me-3" to="/">Home</Link>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link className="me-3" to="/activities">Activities</Link>
+          <Link className="me-3" to="/leaderboard">Leaderboard</Link>
+          <Link className="me-3" to="/teams">Teams</Link>
+          <Link className="me-3" to="/users">Users</Link>
+          <Link to="/workouts">Workouts</Link>
         </nav>
       </header>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/activities" element={<Activities />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/workouts" element={<Workouts />} />
       </Routes>
-    </div>
-  );
-}
-
-function Home() {
-  return (
-    <div>
-      <h2>Welcome to OctoFit</h2>
-      <p>Track workouts, manage your team, and monitor your fitness progress.</p>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-      <p>Coming soon: activity logs, leaderboards, and personalized guidance.</p>
     </div>
   );
 }
