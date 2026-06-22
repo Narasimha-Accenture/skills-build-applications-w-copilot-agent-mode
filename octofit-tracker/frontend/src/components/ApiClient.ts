@@ -3,7 +3,12 @@ const isCodespace = Boolean(codespaceName);
 const host = isCodespace ? `${codespaceName}-8000.app.github.dev` : "localhost:8000";
 const baseUrl = isCodespace ? `https://${host}` : `http://${host}`;
 
-export const getApiUrl = (path: string) => `${baseUrl}/api/${path}`;
+const sanitizePath = (path: string) => path.replace(/^\/+|\/+$/g, "");
+
+export const getApiUrl = (path: string) => {
+  const cleanPath = sanitizePath(path);
+  return `${baseUrl}/api/${cleanPath}/`;
+};
 
 export const normalizeListResponse = <T>(payload: any, key: string): T[] => {
   if (!payload) return [];
