@@ -6,7 +6,7 @@ import leaderboardRouter from "./routes/leaderboard";
 import workoutsRouter from "./routes/workouts";
 import { connectDatabase, getMongoUri } from "./config/database";
 
-const app = express();
+export const app = express();
 const port = 8000;
 const mongoUri = getMongoUri();
 const codespaceName = process.env.CODESPACE_NAME;
@@ -29,14 +29,18 @@ app.use("/api/activities", activitiesRouter);
 app.use("/api/leaderboard", leaderboardRouter);
 app.use("/api/workouts", workoutsRouter);
 
-connectDatabase()
-  .then(() => {
-    console.log("Connected to MongoDB at", mongoUri);
-    app.listen(port, () => {
-      console.log(`Server listening on ${apiUrl}`);
-    });
-  })
-  .catch((error) => {
+export const startServer = async (): Promise<void> => {
+  await connectDatabase();
+  console.log("Connected to MongoDB at", mongoUri);
+
+  app.listen(port, () => {
+    console.log(`Server listening on ${apiUrl}`);
+  });
+};
+
+if (require.main === module) {
+  startServer().catch((error) => {
     console.error("MongoDB connection error:", error);
     process.exit(1);
   });
+}
