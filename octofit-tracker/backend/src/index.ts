@@ -10,8 +10,8 @@ const app = express();
 const port = 8000;
 const mongoUri = getMongoUri();
 const codespaceName = process.env.CODESPACE_NAME;
-const host = codespaceName ? `${codespaceName}-8000.githubpreview.dev` : "localhost";
-const apiUrl = `http://${host}:${port}`;
+const host = codespaceName ? `${codespaceName}-8000.app.github.dev` : "localhost";
+const apiUrl = codespaceName ? `https://${host}` : `http://${host}:${port}`;
 
 app.use(express.json());
 
